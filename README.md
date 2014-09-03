@@ -1,6 +1,6 @@
 ## Game Center Project
 
-Your project is to continue building Ruby games on the Command Line for Koding for Kids.  See the [Project Descriptions](http://vikingcodeschool.com/week-2-ruby/building-the-game-back-ends) and the [Pivotal Tracker project](https://www.pivotaltracker.com/n/projects/1158550) for more details.
+Your project is to continue building Ruby games on the Command Line for Koding for Kids.  See the [Project Description](http://vikingcodeschool.com/week-2-ruby/building-the-game-back-ends) and the [Pivotal Tracker project](https://www.pivotaltracker.com/n/projects/1158550) for more details.
 
 As always, you will:
 
