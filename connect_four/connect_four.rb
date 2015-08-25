@@ -18,6 +18,7 @@ class ConnectFour
   def play
     until win?
       players.each do |player|
+        @board.render
         @board.add_piece(player.prompt_move, player.piece)
       end
     end
