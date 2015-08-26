@@ -1,9 +1,9 @@
+require_relative 'array'
+require_relative 'board'
+require_relative 'player'
+
 # Your code here!
 class ConnectFour
-  require 'array'
-  require 'board'
-  require 'player'
-
   attr_accessor :players, :board
 
   def initialize
@@ -16,10 +16,13 @@ class ConnectFour
 
   # play game
   def play
-    until win?
+    @board.render
+    # want to use until but also want to execute code on win - seems redundant
+    until win? do
       players.each do |player|
-        @board.render
         @board.add_piece(player.prompt_move, player.piece)
+        puts "Congratulations, #{player.name} wins!" if win?
+        @board.render
       end
     end
   end
@@ -31,15 +34,20 @@ class ConnectFour
 
   # prompting player information from user
   def prompt_players
-    puts "P1: "
-    players.push(Player.new)
-    puts "P2: "
-    players.push(Player.new)
+    if @mode == '2p'
+      puts "P1: "
+      players.push(Player.new)
+      puts "P2: "
+      players.push(Player.new)
+    elsif @mode == 'c'
+      puts "pc mode"
+    else raise "Invalid input"
+    end
   end
 
   # prompting play mode from user
   def prompt_mode
-    puts "Do you want to play 2 Player or against AI?"
+    puts "Do you want to play 2 Player or against computer? ('2p' or 'c'): "
     @mode = gets.chomp
   end
 end
