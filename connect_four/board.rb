@@ -1,19 +1,18 @@
 class Board
   def initialize
     # setting up a board with 7 columns and 6 rows
-    #***  warning: block supersedes default value argument
     @board = Array.new(7){Array.new(6, " ")}
   end
 
   # prints out the board
   def render
-    row = @board[0].length
+    row = @board[0].length-1
     until row < 0 do #basically go through each column #_with_index do |col, i|
       @board.each_with_index do |col|
         # starting from the top of the board, print row by row from left to right
-        print (col[row].nil? ? " " : "#{col[row]}")
+        print (col[row] == " " ? "|_" : "|#{col[row]}")
       end
-      print "\n" # on the the next row
+      print "|\n" # on the the next row
       row -= 1
     end
   end
@@ -25,14 +24,17 @@ class Board
       puts "The column is full." 
     else
       # otherwise adds the piece in the first non-occupied (nil) space
-      @board[col].map_with_index do |p, i|
-        if p.nil?
+      @board[col].each_with_index do |p, i|
+        # if empty square, we can add the piece
+        if p == " "
           # save the position by [col, row] to check win condition
           @last_placed_piece_coordinate = [col, i]
           @last_placed_piece = piece
-          # return piece
-          piece
 
+          #puts "#{@last_placed_piece_coordinate} + #{@last_placed_piece}"
+          
+          # adding the piece
+          @board[col][i] = piece
           break
         end
       end
@@ -41,21 +43,23 @@ class Board
 
   # checks if a column is full
   def full?(col)
-    !col.last.nil?
+    col.last != " "
   end
 
   # win conditions
   def winning_diagonal?
-    botleft_topright_diagonal.four_in_a_row? || topleft_botright_diagonal.four_in_a_row?
+    botleft_topright_diagonal.four_in_a_row?(@last_placed_piece) || topleft_botright_diagonal.four_in_a_row?(@last_placed_piece)
   end
 
   # get the bottom left to top right diagonal of a piece
   def botleft_topright_diagonal(point = @last_placed_piece_coordinate)
-    diagonal = []
-    botleft_point = point
-    topright_point = point
+    puts "#{@last_placed_piece_coordinate} + #{@last_placed_piece}"
 
-    diagonal.push(point)
+    diagonal = []
+    botleft_point = point.dup
+    topright_point = point.dup
+
+    diagonal.push(@board[point[0]][point[1]])
 
     while within_grid?(botleft_point) do
       # traverse from center point to bot left and top right simultaneously
@@ -71,26 +75,32 @@ class Board
       diagonal.push(@board[topright_point[0]][topright_point[1]]) if within_grid?(topright_point)
     end
 
+puts "#{diagonal}"
     diagonal
   end
 
   # get the top left to bottom right diagonal of a piece
-  def topleft_botright_diagonal(point = @last_placed_piece_coordinate)
+  def topleft_botright_diagonal(point = @last_placed_piece_coordinate.dup)
     diagonal = []
-    topleft_point = point
-    botright_point = point
-    while within_grid?(point) do
+    topleft_point = point.dup
+    botright_point = point.dup
+
+    diagonal.push(@board[point[0]][point[1]])
+
+    while within_grid?(topleft_point) do
       # traversing the other diagonal (top left to bot right)
       topleft_point[0] -= 1
-      topleft_point[1] -= 1
-      diagonal.unshift(@board[topleft_point[0]][topleft_point[1]]) if within_grid?(point)
+      topleft_point[1] += 1
+      diagonal.unshift(@board[topleft_point[0]][topleft_point[1]]) if within_grid?(topleft_point)
     end
 
     while within_grid?(botright_point) do
       botright_point[0] += 1
-      botright_point[1] += 1
-      diagonal.push(@board[botright_point[0]][botright_point[1]]) if within_grid?(point)
+      botright_point[1] -= 1
+      diagonal.push(@board[botright_point[0]][botright_point[1]]) if within_grid?(botright_point)
     end
+
+    puts "#{diagonal}"
 
     diagonal
   end
@@ -103,16 +113,17 @@ class Board
 
   def winning_horizontal?
     horizontal = []
+    row = @last_placed_piece_coordinate[1]
 
-    @board.each_with_index do |col, i|
-      horizontal.push(col[i])
+    @board.each do |col|
+      horizontal.push(col[row])
     end
 
-    horizontal.four_in_a_row?
+    horizontal.four_in_a_row?(@last_placed_piece)
   end
 
   def winning_vertical?
     # check if there is a consecutive 4 in column 
-    @board[@last_placed_piece_coordinate[0]].join.include?("#{last_placed_piece}" * 4)
+    @board[@last_placed_piece_coordinate[0]].four_in_a_row?(@last_placed_piece)
   end
 end

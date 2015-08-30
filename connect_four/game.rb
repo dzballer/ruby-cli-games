@@ -3,7 +3,7 @@ require_relative 'board'
 require_relative 'player'
 
 # Your code here!
-class ConnectFour
+class Game
   attr_accessor :players, :board
 
   def initialize
@@ -18,11 +18,14 @@ class ConnectFour
   def play
     @board.render
     # want to use until but also want to execute code on win - seems redundant
-    until win? do
+    while true do
       players.each do |player|
         @board.add_piece(player.prompt_move, player.piece)
-        puts "Congratulations, #{player.name} wins!" if win?
         @board.render
+        if win?
+          puts "Congratulations, #{player.name} wins!" 
+          return
+        end
       end
     end
   end
@@ -35,9 +38,9 @@ class ConnectFour
   # prompting player information from user
   def prompt_players
     if @mode == '2p'
-      puts "P1: "
+      print "P1: "
       players.push(Player.new)
-      puts "P2: "
+      print "P2: "
       players.push(Player.new)
     elsif @mode == 'c'
       puts "pc mode"

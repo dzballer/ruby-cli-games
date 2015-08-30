@@ -12,13 +12,32 @@ class Player
   end
 
   def prompt_piece
-    puts "Do you want to play as the 'x' or 'o'?"
-    @piece = gets.chomp
+    loop do
+      puts "Do you want to play as the 'x' or 'o'?"
+      @piece = gets.chomp
+      if ['x','o'].include?(@piece)
+        break
+      else
+        puts "Invalid input. Please try again."
+      end
+    end
   end
 
   def prompt_move
-    puts "Which column would you like to put your piece in? (Enter a number from 0-6)"
-    col = gets.chomp.to_i
+    col = ""
+
+    loop do
+      puts "Which column would you like to put your piece in? (Enter a number from 0-6)"
+      col = gets.chomp.to_i
+      if col >= 0 && col <= 6
+        break
+      else
+        puts "Invalid input. Please try again."
+      end
+    end
+
+    col
+    
   end
 end
 
