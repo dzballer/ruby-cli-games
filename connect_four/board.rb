@@ -20,7 +20,7 @@ class Board
   # adds a piece to the board 
   def add_piece(col, piece)
     # won't add piece if col is full
-    if full?(@board[col]) 
+    if full?(col) 
       puts "The column is full." 
     else
       # otherwise adds the piece in the first non-occupied (nil) space
@@ -30,11 +30,10 @@ class Board
           # save the position by [col, row] to check win condition
           @last_placed_piece_coordinate = [col, i]
           @last_placed_piece = piece
-
-          #puts "#{@last_placed_piece_coordinate} + #{@last_placed_piece}"
-          
+      
           # adding the piece
           @board[col][i] = piece
+          puts "#{@last_placed_piece} played: #{@last_placed_piece_coordinate}"
           break
         end
       end
@@ -43,7 +42,7 @@ class Board
 
   # checks if a column is full
   def full?(col)
-    col.last != " "
+    @board[col].last != " "
   end
 
   # win conditions
@@ -53,8 +52,6 @@ class Board
 
   # get the bottom left to top right diagonal of a piece
   def botleft_topright_diagonal(point = @last_placed_piece_coordinate)
-    puts "#{@last_placed_piece_coordinate} + #{@last_placed_piece}"
-
     diagonal = []
     botleft_point = point.dup
     topright_point = point.dup
@@ -75,7 +72,6 @@ class Board
       diagonal.push(@board[topright_point[0]][topright_point[1]]) if within_grid?(topright_point)
     end
 
-puts "#{diagonal}"
     diagonal
   end
 
@@ -99,8 +95,6 @@ puts "#{diagonal}"
       botright_point[1] -= 1
       diagonal.push(@board[botright_point[0]][botright_point[1]]) if within_grid?(botright_point)
     end
-
-    puts "#{diagonal}"
 
     diagonal
   end

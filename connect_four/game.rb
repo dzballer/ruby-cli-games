@@ -1,6 +1,7 @@
 require_relative 'array'
 require_relative 'board'
 require_relative 'player'
+require_relative 'computer'
 
 # Your code here!
 class Game
@@ -17,10 +18,18 @@ class Game
   # play game
   def play
     @board.render
-    # want to use until but also want to execute code on win - seems redundant
-    while true do
+
+    loop do
       players.each do |player|
-        @board.add_piece(player.prompt_move, player.piece)
+        loop do
+          col = player.prompt_move
+          if !@board.full?(col)
+            @board.add_piece(col, player.piece)
+            break
+          else
+            puts "Column is full, please try again" if !player.is_a?(Computer)
+          end
+        end
         @board.render
         if win?
           puts "Congratulations, #{player.name} wins!" 
@@ -43,7 +52,13 @@ class Game
       print "P2: "
       players.push(Player.new)
     elsif @mode == 'c'
-      puts "pc mode"
+      print "Human: "
+      players.push(Player.new)
+      if players[0].piece == 'x'
+        players.push(Computer.new('o'))
+      else
+        players.push(Computer.new('x'))
+      end
     else raise "Invalid input"
     end
   end

@@ -27,7 +27,7 @@ class Player
     col = ""
 
     loop do
-      puts "Which column would you like to put your piece in? (Enter a number from 0-6)"
+      puts "#{@name}, which column would you like to put your piece in? (Enter a number from 0-6)"
       col = gets.chomp.to_i
       if col >= 0 && col <= 6
         break
