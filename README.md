@@ -1,3 +1,3 @@
-## project_game_center
+## Ruby CLI Games
 
-[An Object-Oriented Ruby project from the Viking Code School](http://www.vikingcodeschool.com)
+Connect Four, Blackjack, Rock Paper Scissors
